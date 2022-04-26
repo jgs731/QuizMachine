@@ -10,17 +10,25 @@ namespace QuizMachine
     {
         List<string> questions = new List<string>();
         string[] answers;
+        StreamWriter writer;
 
         public void storeQuestionAndAnswers(string response)
         {
             string[] vs = response.Split('|');
-            foreach (string v in vs)
+            foreach (string str in vs)
             {
-                if (v.Contains("?")){
-                    questions.Add(v);
+                using (writer = new StreamWriter("question_and_answer_bank.txt"))
+                {
+                    if (str.Contains("?"))
+                    {
+                        questions.Add(str);
+                        continue;
+                    }
+                    Console.WriteLine(str);
+                    writer.WriteLine(str);
                 }
-                answers[0] = v;
             }
+            writer.Close();
         }
     }
 }

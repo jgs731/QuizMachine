@@ -6,17 +6,10 @@ namespace QuizMachine
     {
         static void Main(string[] args)
         {
+            QAndABank qaBank = new QAndABank();
             Console.WriteLine("Enter a question for the bank, with answers separated by | (Mark the correct answer with a '*' at the end)");
             string response = Console.ReadLine();
-            StreamWriter writer;
-            string[] response_array = response.Split("|");
-            foreach (string str in response_array) {
-                using (writer = new StreamWriter("question_and_answer_bank.txt"))
-                {
-                    writer.WriteLine(str);
-                }
-                writer.Close();
-            }
+            qaBank.storeQuestionAndAnswers(response);
         }
     }
 }
