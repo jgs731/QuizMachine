@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QuizMachine
 {
-    internal class QAndABank
+    public class QAndABank
     {
         public static List<string> questions = new List<string>();
         public string[] answers;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Serialization;
 
 namespace QuizMachine
 {
@@ -17,28 +18,32 @@ namespace QuizMachine
         {
             StreamWriter writer;
             string[] vs = response.Split('|');
-            using (writer = new StreamWriter("question_and_answer_bank.txt"))
-            {
-                foreach (string str in vs)
-                {
-                    writer.WriteLine(str);
-                }
+            var serializer = new XmlSerializer(typeof(QAndABank));
+            using (writer = new StreamWriter("question_and_answer_bank.xml"))
+            {         
+                serializer.Serialize(writer, vs);
             }
             writer.Close();
         }
 
         public static String ReadQuestionBank()
         {
-            using (StreamReader reader = new StreamReader("question_and_answer_bank.txt"))
+            String storedQuestion = "";
+            QAndABank file = new QAndABank();
+            var deserializer = new XmlSerializer(typeof(QAndABank));
+            using (StreamReader reader = new StreamReader("question_and_answer_bank.xml"))
             {
+                deserializer.Deserialize(reader);
                 for (int i = 0;  i < reader.ReadToEnd().Length; i++)
-                if (reader.ToString().Contains("?"))
                 {
-                    QAndABank.questions.Add(reader.ToString());
-                    continue;
+                    if (reader.ToString().Contains("?"))
+                    {
+                        storedQuestion = reader.ToString();
+                        continue;
+                    }
                 }
             }
-            return ""; // Think I need to return an object here, will reassess in next commit
+            return storedQuestion; // Think I need to return an object here, will reassess in next commit
         }
     }
 }
