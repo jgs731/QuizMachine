@@ -8,7 +8,7 @@ namespace QuizMachine
 {
     public class QAndABank
     {
-        public static List<string> questions = new List<string>();
+        public string questions;
         public string[] answers;
         public int correctAnswerIndex;
     }

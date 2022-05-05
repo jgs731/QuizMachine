@@ -7,43 +7,61 @@ namespace QuizMachine
     {
         static void Main(string[] args)
         {
-            QAndABank qaBank = new QAndABank();
-            Console.WriteLine("Enter a question for the bank, with answers separated by | (Mark the correct answer with a '*' at the end)");
+            int playerScore = 0;
+            var questions = new QAndABank();
+            Console.WriteLine("Enter a question for the bank, with answers separated by |");
             string response = Console.ReadLine();
+            Console.WriteLine("Which option is the correct answer? (Enter the number)");
+            int correctResponse = Convert.ToInt32(Console.ReadLine());
+            SaveQuestionBank(response, correctResponse);
+            Console.Clear();
+            questions = ReadQuestionBank();
+            Console.WriteLine(questions.questions);
+            string playerAnswer = Console.ReadLine();
+            if (playerAnswer == questions.answers[questions.correctAnswerIndex - 1])
+            {
+                Console.WriteLine("Correct!");
+                playerScore++;
+            }
+            else
+            {
+                Console.WriteLine($"Incorrect, the correct answer is {questions.answers[questions.correctAnswerIndex - 1]}");
+            }
 
-            SaveQuestionBank(response);
+            Console.WriteLine($"Final score: {playerScore}");
         }
 
-        public static void SaveQuestionBank(string response)
+        public static void SaveQuestionBank(string response, int correctIndex)
         {
             StreamWriter writer;
+            var questionStore = new QAndABank();
             string[] vs = response.Split('|');
+            List<string> tempStoreAnswers = new List<string>();
+            questionStore.questions = vs[0];
+            for(int i = 1; i < (vs.Length - 1); i++)
+            {
+                tempStoreAnswers.Add(vs[i].Trim());
+            }
+            questionStore.answers = tempStoreAnswers.ToArray();
+            questionStore.correctAnswerIndex = correctIndex;
             var serializer = new XmlSerializer(typeof(QAndABank));
             using (writer = new StreamWriter("question_and_answer_bank.xml"))
             {         
-                serializer.Serialize(writer, vs);
+                serializer.Serialize(writer, questionStore);
             }
             writer.Close();
         }
 
-        public static String ReadQuestionBank()
+        public static QAndABank ReadQuestionBank()
         {
-            String storedQuestion = "";
-            QAndABank file = new QAndABank();
+            QAndABank question = new QAndABank();
             var deserializer = new XmlSerializer(typeof(QAndABank));
             using (StreamReader reader = new StreamReader("question_and_answer_bank.xml"))
             {
-                deserializer.Deserialize(reader);
-                for (int i = 0;  i < reader.ReadToEnd().Length; i++)
-                {
-                    if (reader.ToString().Contains("?"))
-                    {
-                        storedQuestion = reader.ToString();
-                        continue;
-                    }
-                }
+                question = (QAndABank)deserializer.Deserialize(reader);
             }
-            return storedQuestion; // Think I need to return an object here, will reassess in next commit
+
+            return question;
         }
     }
 }
