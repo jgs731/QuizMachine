@@ -8,33 +8,34 @@ namespace QuizMachine
         static void Main(string[] args)
         {
             int playerScore = 0;
-            var questions = new QAndABank();
-            Console.WriteLine("Enter a question for the bank, with answers separated by |");
-            string response = Console.ReadLine();
-            Console.WriteLine("Which option is the correct answer? (Enter the number)");
-            int correctResponse = Convert.ToInt32(Console.ReadLine());
-            SaveQuestionBank(response, correctResponse);
+            List<QAndABank> questionBank = new List<QAndABank>(5);
+            for(int i = 0; i < questionBank.Count; i++)
+            {
+                String response = UIMethods.GamesmasterQuestions();
+                int correctResponse = UIMethods.GamesMasterCorrectIndex();
+                SaveQuestionBank(questionBank[i], response, correctResponse);
+            }
+
             Console.Clear();
-            questions = ReadQuestionBank();
-            Console.WriteLine(questions.questions);
+            var qns = ReadQuestionBank();
+            Console.WriteLine(qns.questions);
             string playerAnswer = Console.ReadLine();
-            if (playerAnswer == questions.answers[questions.correctAnswerIndex - 1])
+            if (playerAnswer == qns.answers[qns.correctAnswerIndex - 1])
             {
                 Console.WriteLine("Correct!");
                 playerScore++;
             }
             else
             {
-                Console.WriteLine($"Incorrect, the correct answer is {questions.answers[questions.correctAnswerIndex - 1]}");
+                Console.WriteLine($"Incorrect, the correct answer is {qns.answers[qns.correctAnswerIndex - 1]}");
             }
 
             Console.WriteLine($"Final score: {playerScore}");
         }
 
-        public static void SaveQuestionBank(string response, int correctIndex)
+        public static void SaveQuestionBank(QAndABank questionStore, string response, int correctIndex)
         {
-            StreamWriter writer;
-            var questionStore = new QAndABank();
+            StreamWriter writer;;
             string[] vs = response.Split('|');
             List<string> tempStoreAnswers = new List<string>();
             questionStore.questions = vs[0];
@@ -60,7 +61,6 @@ namespace QuizMachine
             {
                 question = (QAndABank)deserializer.Deserialize(reader);
             }
-
             return question;
         }
     }
