@@ -8,13 +8,25 @@ namespace QuizMachine
         static void Main(string[] args)
         {
             int playerScore = 0;
-            List<QAndABank> questionBank = new List<QAndABank>(5);
-            for(int i = 0; i < questionBank.Count; i++)
+            System.Collections.Generic.List<QAndABank> questionBank = new List<QAndABank>(5);
+            QAndABank storedQuestion = new QAndABank();
+            List<string> tempStoreAnswers = new List<string>();
+
+            for (int i = 0; i < 5; i++)
             {
                 String response = UIMethods.GamesmasterQuestions();
-                int correctResponse = UIMethods.GamesMasterCorrectIndex();
-                SaveQuestionBank(questionBank[i], response, correctResponse);
+                storedQuestion.correctAnswerIndex = UIMethods.GamesMasterCorrectIndex() - 1;
+                string[] vs = response.Split('|');
+
+                storedQuestion.questions = vs[0];
+                for (int j = 1; i < vs.Length; i++)
+                {
+                    tempStoreAnswers.Add(vs[j].Trim());
+                }
+                storedQuestion.answers = tempStoreAnswers.ToArray();
+                questionBank.Add(storedQuestion);
             }
+            SaveQuestionBank(questionBank);
 
             Console.Clear();
             var qns = ReadQuestionBank();
@@ -29,23 +41,13 @@ namespace QuizMachine
             {
                 Console.WriteLine($"Incorrect, the correct answer is {qns.answers[qns.correctAnswerIndex - 1]}");
             }
-
             Console.WriteLine($"Final score: {playerScore}");
         }
 
-        public static void SaveQuestionBank(QAndABank questionStore, string response, int correctIndex)
+        public static void SaveQuestionBank(List<QAndABank> questionStore)
         {
-            StreamWriter writer;;
-            string[] vs = response.Split('|');
-            List<string> tempStoreAnswers = new List<string>();
-            questionStore.questions = vs[0];
-            for(int i = 1; i < (vs.Length - 1); i++)
-            {
-                tempStoreAnswers.Add(vs[i].Trim());
-            }
-            questionStore.answers = tempStoreAnswers.ToArray();
-            questionStore.correctAnswerIndex = correctIndex;
-            var serializer = new XmlSerializer(typeof(QAndABank));
+            StreamWriter writer;
+            var serializer = new XmlSerializer(typeof(List<QAndABank>));
             using (writer = new StreamWriter("question_and_answer_bank.xml"))
             {         
                 serializer.Serialize(writer, questionStore);
@@ -55,8 +57,8 @@ namespace QuizMachine
 
         public static QAndABank ReadQuestionBank()
         {
-            QAndABank question = new QAndABank();
-            var deserializer = new XmlSerializer(typeof(QAndABank));
+            var question = new QAndABank();
+            var deserializer = new XmlSerializer(typeof(List<QAndABank>));
             using (StreamReader reader = new StreamReader("question_and_answer_bank.xml"))
             {
                 question = (QAndABank)deserializer.Deserialize(reader);
