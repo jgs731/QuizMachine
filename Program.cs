@@ -10,7 +10,6 @@ namespace QuizMachine
             int playerScore = 0;
             System.Collections.Generic.List<QAndABank> questionBank = new List<QAndABank>(5);
             QAndABank storedQuestion = new QAndABank();
-            List<string> tempStoreAnswers = new List<string>();
 
             for (int i = 0; i < 5; i++)
             {
@@ -18,12 +17,12 @@ namespace QuizMachine
                 storedQuestion.correctAnswerIndex = UIMethods.GamesMasterCorrectIndex() - 1;
                 string[] vs = response.Split('|');
 
-                storedQuestion.questions = vs[0];
+                storedQuestion.questions = vs[0].Trim();
+                storedQuestion.answers = new List<string>();
                 for (int j = 1; i < vs.Length; i++)
                 {
-                    tempStoreAnswers.Add(vs[j].Trim());
+                    storedQuestion.answers.Add(vs[j].Trim());
                 }
-                storedQuestion.answers = tempStoreAnswers.ToArray();
                 questionBank.Add(storedQuestion);
             }
             SaveQuestionBank(questionBank);

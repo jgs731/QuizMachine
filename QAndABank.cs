@@ -9,7 +9,7 @@ namespace QuizMachine
     public class QAndABank
     {
         public string questions;
-        public string[] answers;
+        public List<string> answers;
         public int correctAnswerIndex;
     }
 }
