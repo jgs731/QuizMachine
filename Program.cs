@@ -8,45 +8,48 @@ namespace QuizMachine
         static void Main(string[] args)
         {
             int playerScore = 0;
-            System.Collections.Generic.List<QAndABank> questionBank = new List<QAndABank>(5);
-            QAndABank storedQuestion = new QAndABank();
+            List<QAndA> questionBank = new List<QAndA>(5);
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < questionBank.Capacity; i++)
             {
-                String response = UIMethods.GamesmasterQuestions();
-                storedQuestion.correctAnswerIndex = UIMethods.GamesMasterCorrectIndex() - 1;
-                string[] vs = response.Split('|');
-
-                storedQuestion.questions = vs[0].Trim();
-                storedQuestion.answers = new List<string>();
-                for (int j = 1; i < vs.Length; i++)
-                {
-                    storedQuestion.answers.Add(vs[j].Trim());
-                }
-                questionBank.Add(storedQuestion);
+                QAndA q = UIMethods.InsertQuestion();
+                questionBank.Add(q);
             }
             SaveQuestionBank(questionBank);
 
             Console.Clear();
             var qns = ReadQuestionBank();
-            Console.WriteLine(qns.questions);
-            string playerAnswer = Console.ReadLine();
-            if (playerAnswer == qns.answers[qns.correctAnswerIndex - 1])
+
+            for (int i = 0; i < qns.Count; i++)
             {
-                Console.WriteLine("Correct!");
-                playerScore++;
-            }
-            else
-            {
-                Console.WriteLine($"Incorrect, the correct answer is {qns.answers[qns.correctAnswerIndex - 1]}");
+                playerScore =+ PickRandomQuestion(qns);
             }
             Console.WriteLine($"Final score: {playerScore}");
         }
 
-        public static void SaveQuestionBank(List<QAndABank> questionStore)
+        private static int PickRandomQuestion(List<QAndA> qns)
+        {
+            int score = 0;
+            Random randomQuestionNumber = new Random();
+            int randomIndex = randomQuestionNumber.Next(1, qns.Count);
+            Console.WriteLine(qns[randomIndex].question);
+            string playerAnswer = Console.ReadLine();
+            if (playerAnswer == qns[randomIndex].answers[qns[randomIndex].correctAnswerIndex])
+            {
+                Console.WriteLine("Correct!");
+                score++;
+            }
+            else
+            {
+                Console.WriteLine($"Incorrect, the correct answer is {qns[randomIndex].answers[qns[randomIndex].correctAnswerIndex]}");
+            }
+            return score;
+        }
+
+        public static void SaveQuestionBank(List<QAndA> questionStore)
         {
             StreamWriter writer;
-            var serializer = new XmlSerializer(typeof(List<QAndABank>));
+            var serializer = new XmlSerializer(typeof(List<QAndA>));
             using (writer = new StreamWriter("question_and_answer_bank.xml"))
             {         
                 serializer.Serialize(writer, questionStore);
@@ -54,13 +57,13 @@ namespace QuizMachine
             writer.Close();
         }
 
-        public static QAndABank ReadQuestionBank()
+        public static List<QAndA> ReadQuestionBank()
         {
-            var question = new QAndABank();
-            var deserializer = new XmlSerializer(typeof(List<QAndABank>));
+            var question = new List<QAndA>();
+            var deserializer = new XmlSerializer(typeof(List<QAndA>));
             using (StreamReader reader = new StreamReader("question_and_answer_bank.xml"))
             {
-                question = (QAndABank)deserializer.Deserialize(reader);
+                question = (List<QAndA>)deserializer.Deserialize(reader);
             }
             return question;
         }

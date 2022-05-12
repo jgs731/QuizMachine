@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace QuizMachine
 {
-    public class QAndABank
+    public class QAndA
     {
-        public string questions;
+        public string question;
         public List<string> answers;
         public int correctAnswerIndex;
     }
