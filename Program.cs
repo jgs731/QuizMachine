@@ -6,19 +6,23 @@ namespace QuizMachine
     internal class Program
     {
         static Random? randomQuestionNumber;
+        static string file = "question_and_answer_bank.xml";
         static void Main(string[] args)
         {
             int playerScore = 0;
-            List<QAndA> questionBank = new List<QAndA>(5);
 
-            for (int i = 0; i < questionBank.Capacity; i++)
-            {
-                QAndA q = UIMethods.InsertQuestion();
-                questionBank.Add(q);
+            if (!File.Exists(file)) {
+                List<QAndA> questionBank = new List<QAndA>(5);
+
+                for (int i = 0; i < questionBank.Capacity; i++)
+                {
+                    QAndA q = UIMethods.InsertQuestion();
+                    questionBank.Add(q);
+                }
+                SaveQuestionBank(questionBank);
+
+                Console.Clear();
             }
-            SaveQuestionBank(questionBank);
-
-            Console.Clear();
             var qns = ReadQuestionBank();
 
             for (int i = 0; i < qns.Count; i++)
@@ -57,7 +61,7 @@ namespace QuizMachine
         {
             StreamWriter writer;
             var serializer = new XmlSerializer(typeof(List<QAndA>));
-            using (writer = new StreamWriter("question_and_answer_bank.xml"))
+            using (writer = new StreamWriter(file))
             {         
                 serializer.Serialize(writer, questionStore);
             }
@@ -71,7 +75,7 @@ namespace QuizMachine
         {
             var question = new List<QAndA>();
             var deserializer = new XmlSerializer(typeof(List<QAndA>));
-            using (StreamReader reader = new StreamReader("question_and_answer_bank.xml"))
+            using (StreamReader reader = new StreamReader(file))
             {
                 question = (List<QAndA>)deserializer.Deserialize(reader);
             }
