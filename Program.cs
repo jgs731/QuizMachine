@@ -5,6 +5,7 @@ namespace QuizMachine
 {
     internal class Program
     {
+        static Random? randomQuestionNumber;
         static void Main(string[] args)
         {
             int playerScore = 0;
@@ -26,11 +27,14 @@ namespace QuizMachine
             }
             Console.WriteLine($"Final score: {playerScore}");
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="qns"></param>
+        /// <returns></returns>
         private static int PickRandomQuestion(List<QAndA> qns)
         {
             int score = 0;
-            Random randomQuestionNumber = new Random();
             int randomIndex = randomQuestionNumber.Next(1, qns.Count);
             Console.WriteLine(qns[randomIndex].question);
             string playerAnswer = Console.ReadLine();
@@ -45,7 +49,10 @@ namespace QuizMachine
             }
             return score;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="questionStore"></param>
         public static void SaveQuestionBank(List<QAndA> questionStore)
         {
             StreamWriter writer;
@@ -56,7 +63,10 @@ namespace QuizMachine
             }
             writer.Close();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static List<QAndA> ReadQuestionBank()
         {
             var question = new List<QAndA>();

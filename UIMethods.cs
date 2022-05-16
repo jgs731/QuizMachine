@@ -8,11 +8,15 @@ namespace QuizMachine
 {
     internal class UIMethods
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static QAndA InsertQuestion()
         {
             QAndA storedQuestion = new QAndA();
             String response = GamesmasterQuestions();
-            storedQuestion.correctAnswerIndex = GamesMasterCorrectIndex() - 1;
+            storedQuestion.correctAnswerIndex = GamesMasterCorrectIndex(storedQuestion);
             string[] vs = response.Split('|');
 
             storedQuestion.question = vs[0].Trim();
@@ -23,22 +27,36 @@ namespace QuizMachine
             }
             return storedQuestion;
         }
-
-        public static String GamesmasterQuestions()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GamesmasterQuestions()
         {
             Console.WriteLine("Enter a question for the bank, with answers separated by |");
             string response = Console.ReadLine();
             return response;
         }
-
-        public static int GamesMasterCorrectIndex()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static int GamesMasterCorrectIndex(QAndA addedQuestion)
         {
             int correctIndex;
             Console.WriteLine("Which option is the correct answer? (Enter the number)");
             bool correctResponse = Int32.TryParse(Console.ReadLine(), out correctIndex);
-            if (correctResponse == false)
+            while (correctResponse == false)
             {
-                Console.WriteLine("Please enter a valid number index");
+                if (addedQuestion.answers[correctIndex] == null)
+                {
+                    Console.WriteLine("Please enter a valid number index");
+                }
+                else
+                {
+                    correctIndex = correctIndex - 1;
+                    correctResponse = true;
+                }
             }
             return correctIndex;
         }
