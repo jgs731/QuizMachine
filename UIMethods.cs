@@ -8,6 +8,8 @@ namespace QuizMachine
 {
     internal class UIMethods
     {
+        static Random? rng = new Random();
+
         /// <summary>
         /// 
         /// </summary>
@@ -59,6 +61,30 @@ namespace QuizMachine
                 }
             }
             return correctIndex;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="qns"></param>
+        /// <returns></returns>
+        public static int GetQuestionScore(List<QAndA> qns)
+        {
+            int score = 0;
+            int randomIndex = rng.Next(1, qns.Count);
+            var q = qns[randomIndex];
+            Console.WriteLine(q.question);
+            string playerAnswer = Console.ReadLine();
+            if (playerAnswer == q.answers[q.correctAnswerIndex])
+            {
+                Console.WriteLine("Correct!");
+                score++;
+            }
+            else
+            {
+                Console.WriteLine($"Incorrect, the correct answer is {q.answers[q.correctAnswerIndex]}");
+            }
+            return score;
         }
     }
 }

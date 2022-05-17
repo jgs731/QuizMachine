@@ -5,15 +5,13 @@ namespace QuizMachine
 {
     internal class Program
     {
-        static Random? randomQuestionNumber;
         static string file = "question_and_answer_bank.xml";
         static void Main(string[] args)
         {
             int playerScore = 0;
+            List<QAndA> questionBank = new List<QAndA>(5);
 
             if (!File.Exists(file)) {
-                List<QAndA> questionBank = new List<QAndA>(5);
-
                 for (int i = 0; i < questionBank.Capacity; i++)
                 {
                     QAndA q = UIMethods.InsertQuestion();
@@ -23,36 +21,15 @@ namespace QuizMachine
 
                 Console.Clear();
             }
-            var qns = ReadQuestionBank();
+            questionBank = ReadQuestionBank();
 
-            for (int i = 0; i < qns.Count; i++)
+            for (int i = 0; i < questionBank.Count; i++)
             {
-                playerScore =+ PickRandomQuestion(qns);
+                playerScore += UIMethods.GetQuestionScore(questionBank);
             }
             Console.WriteLine($"Final score: {playerScore}");
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="qns"></param>
-        /// <returns></returns>
-        private static int PickRandomQuestion(List<QAndA> qns)
-        {
-            int score = 0;
-            int randomIndex = randomQuestionNumber.Next(1, qns.Count);
-            Console.WriteLine(qns[randomIndex].question);
-            string playerAnswer = Console.ReadLine();
-            if (playerAnswer == qns[randomIndex].answers[qns[randomIndex].correctAnswerIndex])
-            {
-                Console.WriteLine("Correct!");
-                score++;
-            }
-            else
-            {
-                Console.WriteLine($"Incorrect, the correct answer is {qns[randomIndex].answers[qns[randomIndex].correctAnswerIndex]}");
-            }
-            return score;
-        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -73,13 +50,11 @@ namespace QuizMachine
         /// <returns></returns>
         public static List<QAndA> ReadQuestionBank()
         {
-            var question = new List<QAndA>();
             var deserializer = new XmlSerializer(typeof(List<QAndA>));
             using (StreamReader reader = new StreamReader(file))
             {
-                question = (List<QAndA>)deserializer.Deserialize(reader);
+                return (List<QAndA>)deserializer.Deserialize(reader);
             }
-            return question;
         }
     }
 }
