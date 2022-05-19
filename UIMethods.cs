@@ -11,10 +11,10 @@ namespace QuizMachine
         static Random? rng = new Random();
 
         /// <summary>
-        /// 
+        /// Organises the <QAndA>question</QAndA> and <QAndA>answers</QAndA> entered by the Gamesmaster into a QAndA object.
         /// </summary>
-        /// <returns></returns>
-        public static QAndA InsertQuestion()
+        /// <returns>QAndA object containing question, possible answers and the correct answer index</returns>
+        public static QAndA EnterQuestion()
         {
             QAndA storedQuestion = new QAndA();
             String response = GamesmasterQuestions();
@@ -30,9 +30,9 @@ namespace QuizMachine
             return storedQuestion;
         }
         /// <summary>
-        /// 
+        /// Prompt for the Gamesmaster to enter a question and possible answers
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Gamesmaster question and possible answers in string format</returns>
         public static string GamesmasterQuestions()
         {
             Console.WriteLine("Enter a question for the bank, with answers separated by |");
@@ -40,15 +40,16 @@ namespace QuizMachine
             return response;
         }
         /// <summary>
-        /// 
+        /// Store the correct answer index (zero-index is accounted for here so that the Gamesmaster can start from 1)
         /// </summary>
-        /// <returns></returns>
+        /// <param name="addedQuestion">QnA object for a single question</param>
+        /// <returns>positive Integer</returns>
         public static int GamesMasterCorrectIndex(QAndA addedQuestion)
         {
             int correctIndex;
             Console.WriteLine("Which option is the correct answer? (Enter the number)");
-            bool correctResponse = Int32.TryParse(Console.ReadLine(), out correctIndex);
-            while (correctResponse == false)
+            bool validInput = Int32.TryParse(Console.ReadLine(), out correctIndex);
+            while (validInput == false)
             {
                 if (addedQuestion.answers[correctIndex] == null)
                 {
@@ -57,22 +58,23 @@ namespace QuizMachine
                 else
                 {
                     correctIndex = correctIndex - 1;
-                    correctResponse = true;
+                    validInput = true;
                 }
             }
             return correctIndex;
         }
 
         /// <summary>
-        /// 
+        /// Displays a question to the player, and asserts if the response is correct
         /// </summary>
-        /// <param name="qns"></param>
-        /// <returns></returns>
+        /// <param name="qns">List of questions (stored as QAndA objects in a List)</param>
+        /// <returns>1 for a correct answer or 0 for an incorrect answer</returns>
         public static int GetQuestionScore(List<QAndA> qns)
         {
             int score = 0;
             int randomIndex = rng.Next(1, qns.Count);
             var q = qns[randomIndex];
+            Console.Clear();
             Console.WriteLine(q.question);
             string playerAnswer = Console.ReadLine();
             if (playerAnswer == q.answers[q.correctAnswerIndex])
@@ -85,6 +87,15 @@ namespace QuizMachine
                 Console.WriteLine($"Incorrect, the correct answer is {q.answers[q.correctAnswerIndex]}");
             }
             return score;
+        }
+
+        /// <summary>
+        /// Display the final score to the player at the end of the game/
+        /// </summary>
+        /// <param name="playerScore">Player score calculated during the game</param>
+        public static void DisplayFinalScore(int playerScore)
+        {
+            Console.WriteLine($"Final score: {playerScore}");
         }
     }
 }

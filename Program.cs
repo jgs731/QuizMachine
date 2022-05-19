@@ -11,29 +11,30 @@ namespace QuizMachine
             int playerScore = 0;
             List<QAndA> questionBank = new List<QAndA>(5);
 
-            if (!File.Exists(file)) {
+            if (!File.Exists(file))
+            {
                 for (int i = 0; i < questionBank.Capacity; i++)
                 {
-                    QAndA q = UIMethods.InsertQuestion();
+                    QAndA q = UIMethods.EnterQuestion();
                     questionBank.Add(q);
                 }
                 SaveQuestionBank(questionBank);
-
-                Console.Clear();
             }
-            questionBank = ReadQuestionBank();
-
-            for (int i = 0; i < questionBank.Count; i++)
+            else
             {
-                playerScore += UIMethods.GetQuestionScore(questionBank);
+                questionBank = ReadQuestionBank();
+                for (int i = 0; i < questionBank.Count; i++)
+                {
+                    playerScore += UIMethods.GetQuestionScore(questionBank);
+                }
             }
-            Console.WriteLine($"Final score: {playerScore}");
+            UIMethods.DisplayFinalScore(playerScore);
         }
-        
+
         /// <summary>
-        /// 
+        /// Outputs the List of Questions to a XML file
         /// </summary>
-        /// <param name="questionStore"></param>
+        /// <param name="questionStore">List of QnA objects for serialisation</param>
         public static void SaveQuestionBank(List<QAndA> questionStore)
         {
             StreamWriter writer;
@@ -45,9 +46,9 @@ namespace QuizMachine
             writer.Close();
         }
         /// <summary>
-        /// 
+        /// Converts the XML file of questions to a QAndA object to be read in the Quiz game
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Deserialised List of QnA objects</returns>
         public static List<QAndA> ReadQuestionBank()
         {
             var deserializer = new XmlSerializer(typeof(List<QAndA>));
