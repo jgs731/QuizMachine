@@ -40,19 +40,19 @@ namespace QuizMachine
             bool responseInCorrectFormat = false;
             while(responseInCorrectFormat)
             {
-                if (!response.Contains("|") {
-                Console.WriteLine("Please separate answers with the '|' character. It's important!")
+                if (!response.Contains("|")) {
+                    Console.WriteLine("Please separate answers with the '|' character. It's important!");
                 }
                 else if (response.Length == 0)
                 {
-                    "Question is blank. Please try again"
+                    Console.WriteLine("Question is blank. Please try again");
                 }
                 else
                 {
                    responseInCorrectFormat = true; 
-                   return response;
                 }
             }
+            return response;
         }
         /// <summary>
         /// Store the correct answer index (zero-index is accounted for here so that the Gamesmaster can start from 1)
@@ -66,7 +66,7 @@ namespace QuizMachine
             bool validInput = Int32.TryParse(Console.ReadLine(), out correctIndex);
             while (validInput == false)
             {
-                if (addedQuestion.answers[correctIndex] == null || correctIndex <= 0 || !IsNumber(correctIndex))
+                if (addedQuestion.answers[correctIndex] == null || correctIndex <= 0)
                 {
                     Console.WriteLine("Please enter a valid number index");
                 }
@@ -92,7 +92,7 @@ namespace QuizMachine
             Console.Clear();
             Console.WriteLine(q.question);
             for(int i = 0; i < q.answers.Count; i++) {
-                System.Write(q.answers[i] + "\t")
+                Console.WriteLine(q.answers[i] + "\t");
             }
 
             string playerAnswer = Console.ReadLine();
@@ -105,6 +105,7 @@ namespace QuizMachine
             {
                 Console.WriteLine($"Incorrect, the correct answer is {q.answers[q.correctAnswerIndex]}");
             }
+            qns.Remove(q);
             return score;
         }
 

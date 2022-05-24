@@ -5,7 +5,7 @@ namespace QuizMachine
 {
     internal class Program
     {
-        static string readonly FILE_NAME = "question_and_answer_bank.xml";
+        static readonly string FILE_NAME = "question_and_answer_bank.xml";
 
         static void Main(string[] args)
         {
