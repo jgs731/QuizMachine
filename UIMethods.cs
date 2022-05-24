@@ -37,7 +37,22 @@ namespace QuizMachine
         {
             Console.WriteLine("Enter a question for the bank, with answers separated by |");
             string response = Console.ReadLine();
-            return response;
+            bool responseInCorrectFormat = false;
+            while(responseInCorrectFormat)
+            {
+                if (!response.Contains("|") {
+                Console.WriteLine("Please separate answers with the '|' character. It's important!")
+                }
+                else if (response.Length == 0)
+                {
+                    "Question is blank. Please try again"
+                }
+                else
+                {
+                   responseInCorrectFormat = true; 
+                   return response;
+                }
+            }
         }
         /// <summary>
         /// Store the correct answer index (zero-index is accounted for here so that the Gamesmaster can start from 1)
@@ -51,7 +66,7 @@ namespace QuizMachine
             bool validInput = Int32.TryParse(Console.ReadLine(), out correctIndex);
             while (validInput == false)
             {
-                if (addedQuestion.answers[correctIndex] == null)
+                if (addedQuestion.answers[correctIndex] == null || correctIndex <= 0 || !IsNumber(correctIndex))
                 {
                     Console.WriteLine("Please enter a valid number index");
                 }
