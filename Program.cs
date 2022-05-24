@@ -5,13 +5,14 @@ namespace QuizMachine
 {
     internal class Program
     {
-        static string file = "question_and_answer_bank.xml";
+        static string readonly FILE_NAME = "question_and_answer_bank.xml";
+
         static void Main(string[] args)
         {
             int playerScore = 0;
             List<QAndA> questionBank = new List<QAndA>(5);
 
-            if (!File.Exists(file))
+            if (!File.Exists(FILE_NAME))
             {
                 for (int i = 0; i < questionBank.Capacity; i++)
                 {
@@ -39,7 +40,7 @@ namespace QuizMachine
         {
             StreamWriter writer;
             var serializer = new XmlSerializer(typeof(List<QAndA>));
-            using (writer = new StreamWriter(file))
+            using (writer = new StreamWriter(FILE_NAME))
             {         
                 serializer.Serialize(writer, questionStore);
             }
@@ -52,7 +53,7 @@ namespace QuizMachine
         public static List<QAndA> ReadQuestionBank()
         {
             var deserializer = new XmlSerializer(typeof(List<QAndA>));
-            using (StreamReader reader = new StreamReader(file))
+            using (StreamReader reader = new StreamReader(FILE_NAME))
             {
                 return (List<QAndA>)deserializer.Deserialize(reader);
             }

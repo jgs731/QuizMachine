@@ -8,7 +8,7 @@ namespace QuizMachine
 {
     internal class UIMethods
     {
-        static Random? rng = new Random();
+        static readonly Random rng = new Random();
 
         /// <summary>
         /// Organises the <QAndA>question</QAndA> and <QAndA>answers</QAndA> entered by the Gamesmaster into a QAndA object.
@@ -17,7 +17,7 @@ namespace QuizMachine
         public static QAndA EnterQuestion()
         {
             QAndA storedQuestion = new QAndA();
-            String response = GamesmasterQuestions();
+            string response = GamesmasterQuestions();
             storedQuestion.correctAnswerIndex = GamesMasterCorrectIndex(storedQuestion);
             string[] vs = response.Split('|');
 
@@ -72,10 +72,14 @@ namespace QuizMachine
         public static int GetQuestionScore(List<QAndA> qns)
         {
             int score = 0;
-            int randomIndex = rng.Next(1, qns.Count);
+            int randomIndex = rng.Next(qns.Count);
             var q = qns[randomIndex];
             Console.Clear();
             Console.WriteLine(q.question);
+            for(int i = 0; i < q.answers.Count; i++) {
+                System.Write(q.answers[i] + "\t")
+            }
+
             string playerAnswer = Console.ReadLine();
             if (playerAnswer == q.answers[q.correctAnswerIndex])
             {
