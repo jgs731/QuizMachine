@@ -10,7 +10,8 @@ namespace QuizMachine
         static void Main(string[] args)
         {
             int playerScore = 0;
-            List<QAndA> questionBank = new List<QAndA>(5);
+            int userDefinedQuestionNumber;
+            List<QAndA> questionBank = new List<QAndA>(UIMethods.SetNumberOfQuestions());
 
             if (!File.Exists(FILE_NAME))
             {
@@ -28,8 +29,8 @@ namespace QuizMachine
                 {
                     playerScore += UIMethods.GetQuestionScore(questionBank);
                 }
+                UIMethods.DisplayFinalScore(playerScore);
             }
-            UIMethods.DisplayFinalScore(playerScore);
         }
 
         /// <summary>

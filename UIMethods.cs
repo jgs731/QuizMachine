@@ -10,6 +10,25 @@ namespace QuizMachine
     {
         static readonly Random rng = new Random();
 
+        public static int SetNumberOfQuestions()
+        {
+            int correctResponse;
+            Console.WriteLine("How many questions would you want to store in the question bank?");
+            bool questionNumber = Int32.TryParse(Console.ReadLine(), out correctResponse);
+            while (questionNumber == false)
+            {
+                if (questionNumber)
+                {
+                    Console.WriteLine($"You have chosen to enter #{correctResponse} questions.");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid amount added. Please retry!");
+                }
+            }
+            return correctResponse;
+        }
+
         /// <summary>
         /// Organises the <QAndA>question</QAndA> and <QAndA>answers</QAndA> entered by the Gamesmaster into a QAndA object.
         /// </summary>
@@ -18,7 +37,7 @@ namespace QuizMachine
         {
             QAndA storedQuestion = new QAndA();
             string response = GamesmasterQuestions();
-            storedQuestion.correctAnswerIndex = GamesMasterCorrectIndex(storedQuestion);
+            storedQuestion.correctAnswerIndex = GamesMasterCorrectIndex();
             string[] vs = response.Split('|');
 
             storedQuestion.question = vs[0].Trim();
@@ -35,9 +54,9 @@ namespace QuizMachine
         /// <returns>Gamesmaster question and possible answers in string format</returns>
         public static string GamesmasterQuestions()
         {
+            bool responseInCorrectFormat = false;
             Console.WriteLine("Enter a question for the bank, with answers separated by |");
             string response = Console.ReadLine();
-            bool responseInCorrectFormat = false;
             while(responseInCorrectFormat)
             {
                 if (!response.Contains("|")) {
@@ -59,14 +78,15 @@ namespace QuizMachine
         /// </summary>
         /// <param name="addedQuestion">QnA object for a single question</param>
         /// <returns>positive Integer</returns>
-        public static int GamesMasterCorrectIndex(QAndA addedQuestion)
+        public static int GamesMasterCorrectIndex()
         {
             int correctIndex;
             Console.WriteLine("Which option is the correct answer? (Enter the number)");
-            bool validInput = Int32.TryParse(Console.ReadLine(), out correctIndex);
-            while (validInput == false)
+            string userEnteredResponse = Console.ReadLine();
+            bool validInput = int.TryParse(userEnteredResponse, out correctIndex);
+            while (validInput)
             {
-                if (addedQuestion.answers[correctIndex] == null || correctIndex <= 0)
+                if (correctIndex <= 0)
                 {
                     Console.WriteLine("Please enter a valid number index");
                 }
