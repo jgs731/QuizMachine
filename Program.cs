@@ -10,8 +10,7 @@ namespace QuizMachine
         static void Main(string[] args)
         {
             int playerScore = 0;
-            int userDefinedQuestionNumber;
-            List<QAndA> questionBank = new List<QAndA>(UIMethods.SetNumberOfQuestions());
+            List<QAndA> questionBank = new List<QAndA>(3);
 
             if (!File.Exists(FILE_NAME))
             {
