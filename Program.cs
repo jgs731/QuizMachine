@@ -11,12 +11,13 @@ namespace QuizMachine
         {
             int playerScore = 0;
             List<QAndA> questionBank = new List<QAndA>(3);
+            QAndA q;
 
             if (!File.Exists(FILE_NAME))
             {
                 for (int i = 0; i < questionBank.Capacity; i++)
                 {
-                    QAndA q = UIMethods.EnterQuestion();
+                    q = UIMethods.EnterQuestion();
                     questionBank.Add(q);
                 }
                 SaveQuestionBank(questionBank);
@@ -27,6 +28,7 @@ namespace QuizMachine
                 for (int i = 0; i < questionBank.Count; i++)
                 {
                     playerScore += UIMethods.GetQuestionScore(questionBank);
+                    questionBank.Remove(questionBank[i]);
                 }
                 UIMethods.DisplayFinalScore(playerScore);
             }

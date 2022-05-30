@@ -17,18 +17,32 @@ namespace QuizMachine
         public static QAndA EnterQuestion()
         {
             QAndA storedQuestion = new QAndA();
-            string response = GamesmasterQuestions();
-            storedQuestion.correctAnswerIndex = GamesMasterCorrectIndex();
-            string[] vs = response.Split('|');
-
-            storedQuestion.question = vs[0].Trim();
-            storedQuestion.answers = new List<string>();
-            for (int j = 1; j < vs.Length; j++)
+            string response;
+            string[] separatedQuestionAndAnswers = {};
+            bool validQuestionAdded = false;
+            while (validQuestionAdded == false)
             {
-                storedQuestion.answers.Add(vs[j].Trim());
+                response = GamesmasterQuestions();
+                if (!response.Contains('|') || String.IsNullOrEmpty(response))
+                {
+                    Console.WriteLine("Please enter a question and possible answers in the expected format!");
+                }
+                else
+                {
+                    separatedQuestionAndAnswers = response.Split('|');
+                    storedQuestion.question = separatedQuestionAndAnswers[0].Trim();
+                    storedQuestion.answers = new List<string>();
+                    for (int j = 1; j < separatedQuestionAndAnswers.Length; j++)
+                    {
+                        storedQuestion.answers.Add(separatedQuestionAndAnswers[j].Trim());
+                    }
+                    storedQuestion.correctAnswerIndex = GamesMasterCorrectIndex();
+                    validQuestionAdded = true;
+                }
             }
             return storedQuestion;
         }
+
         /// <summary>
         /// Prompt for the Gamesmaster to enter a question and possible answers
         /// </summary>
@@ -58,19 +72,17 @@ namespace QuizMachine
         public static int GamesMasterCorrectIndex()
         {
             int correctIndex;
-            Console.WriteLine("Which option is the correct answer? (Enter the number)");
-            string userEnteredResponse = Console.ReadLine();
-            bool validInput = int.TryParse(userEnteredResponse, out correctIndex);
-            while (validInput == false)
+            Console.WriteLine("Which option is the correct answer? (Enter the number)");            
+            while (true)
             {
-                if (correctIndex <= 0)
+                if (int.TryParse(Console.ReadLine(), out correctIndex) || correctIndex <= 0)
                 {
-                    Console.WriteLine("Please enter a valid number index");
+                    Console.WriteLine("Invalid number index entered. Try again! ");
                 }
                 else
                 {
-                    correctIndex = correctIndex - 1;
-                    validInput = true;
+                    correctIndex--;
+                    break;
                 }
             }
             return correctIndex;
@@ -89,20 +101,20 @@ namespace QuizMachine
             Console.Clear();
             Console.WriteLine(q.question);
             for(int i = 0; i < q.answers.Count; i++) {
-                Console.Write(q.answers[i] + "\t");
+                Console.Write(q.answers[i].ToLower() + "\t");
             }
+            Console.WriteLine();
 
             string playerAnswer = Console.ReadLine();
-            if (playerAnswer == q.answers[q.correctAnswerIndex - 1])
+            if (playerAnswer.ToLower() == q.answers[q.correctAnswerIndex].ToLower())
             {
                 Console.WriteLine("Correct!");
                 score++;
             }
             else
             {
-                Console.WriteLine($"Incorrect, the correct answer is {q.answers[q.correctAnswerIndex - 1]}");
+                Console.WriteLine($"Incorrect, the correct answer is {q.answers[q.correctAnswerIndex]}");
             }
-            qns.Remove(q);
             return score;
         }
 
