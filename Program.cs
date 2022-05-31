@@ -27,7 +27,7 @@ namespace QuizMachine
                 questionBank = ReadQuestionBank();
                 for (int i = 0; i < questionBank.Count; i++)
                 {
-                    playerScore += UIMethods.GetQuestionScore(questionBank);
+                    playerScore += UIMethods.GetPlayerScore(questionBank);
                     questionBank.Remove(questionBank[i]);
                 }
                 UIMethods.DisplayFinalScore(playerScore);

@@ -93,7 +93,7 @@ namespace QuizMachine
         /// </summary>
         /// <param name="qns">List of questions (stored as QAndA objects in a List)</param>
         /// <returns>1 for a correct answer or 0 for an incorrect answer</returns>
-        public static int GetQuestionScore(List<QAndA> qns)
+        public static int GetPlayerScore(List<QAndA> qns)
         {
             int score = 0;
             int randomIndex = rng.Next(qns.Count);
