@@ -66,7 +66,7 @@ namespace QuizMachine
             Console.WriteLine("Which option is the correct answer? (Enter the number)");            
             while (true)
             {
-                if (int.TryParse(Console.ReadLine(), out correctIndex) || correctIndex <= 0 || correctIndex > numberOfPossibleAnswers)
+                if (!int.TryParse(Console.ReadLine(), out correctIndex) || correctIndex <= 0 || correctIndex > numberOfPossibleAnswers)
                 {
                     Console.WriteLine("Invalid number index entered. Try again! ");
                 }
