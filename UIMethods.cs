@@ -26,6 +26,8 @@ namespace QuizMachine
                 if (!response.Contains('|') || String.IsNullOrEmpty(response))
                 {
                     Console.WriteLine("Please enter a question and possible answers in the expected format!");
+                    Thread.Sleep(500);
+                    Console.Clear();
                 }
                 else
                 {
@@ -49,19 +51,8 @@ namespace QuizMachine
         /// <returns>Gamesmaster question and possible answers in string format</returns>
         public static string AddQuestion()
         {
-            bool responseCorrectFormat = false;
             Console.WriteLine("Enter a question for the bank, with answers separated by |");
             string response = Console.ReadLine();
-            while(responseCorrectFormat)
-            {
-                if (!response.Contains("|") || response.Length == 0) {
-                    Console.WriteLine("Please separate answers with the '|' character. It's important!");
-                }
-                else
-                {
-                   responseCorrectFormat = true; 
-                }
-            }
             return response;
         }
         /// <summary>
