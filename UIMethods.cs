@@ -22,7 +22,7 @@ namespace QuizMachine
             bool validQuestionAdded = false;
             while (validQuestionAdded == false)
             {
-                response = GamesmasterQuestions();
+                response = AddQuestion();
                 if (!response.Contains('|') || String.IsNullOrEmpty(response))
                 {
                     Console.WriteLine("Please enter a question and possible answers in the expected format!");
@@ -36,7 +36,7 @@ namespace QuizMachine
                     {
                         storedQuestion.answers.Add(separatedQuestionAndAnswers[j].Trim());
                     }
-                    storedQuestion.correctAnswerIndex = GamesMasterCorrectIndex();
+                    storedQuestion.correctAnswerIndex = SetCorrectAnswerIndex();
                     validQuestionAdded = true;
                 }
             }
@@ -47,7 +47,7 @@ namespace QuizMachine
         /// Prompt for the Gamesmaster to enter a question and possible answers
         /// </summary>
         /// <returns>Gamesmaster question and possible answers in string format</returns>
-        public static string GamesmasterQuestions()
+        public static string AddQuestion()
         {
             bool responseCorrectFormat = false;
             Console.WriteLine("Enter a question for the bank, with answers separated by |");
@@ -69,7 +69,7 @@ namespace QuizMachine
         /// </summary>
         /// <param name="addedQuestion">QnA object for a single question</param>
         /// <returns>positive Integer</returns>
-        public static int GamesMasterCorrectIndex()
+        public static int SetCorrectAnswerIndex()
         {
             int correctIndex;
             Console.WriteLine("Which option is the correct answer? (Enter the number)");            
