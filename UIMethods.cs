@@ -36,7 +36,7 @@ namespace QuizMachine
                     {
                         storedQuestion.answers.Add(separatedQuestionAndAnswers[j].Trim());
                     }
-                    storedQuestion.correctAnswerIndex = SetCorrectAnswerIndex();
+                    storedQuestion.correctAnswerIndex = SetCorrectAnswerIndex(storedQuestion.answers.Count);
                     validQuestionAdded = true;
                 }
             }
@@ -69,13 +69,13 @@ namespace QuizMachine
         /// </summary>
         /// <param name="addedQuestion">QnA object for a single question</param>
         /// <returns>positive Integer</returns>
-        public static int SetCorrectAnswerIndex()
+        public static int SetCorrectAnswerIndex(int numberOfPossibleAnswers)
         {
             int correctIndex;
             Console.WriteLine("Which option is the correct answer? (Enter the number)");            
             while (true)
             {
-                if (int.TryParse(Console.ReadLine(), out correctIndex) || correctIndex <= 0)
+                if (int.TryParse(Console.ReadLine(), out correctIndex) || correctIndex <= 0 || correctIndex > numberOfPossibleAnswers)
                 {
                     Console.WriteLine("Invalid number index entered. Try again! ");
                 }
